@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+  nginxphp:
+    build: 
+      context: ../
+      dockerfile: ./docker/nginxphp/Dockerfile
+    container_name: nginxphp
+    image: nginxphp
+    depends_on:
+      - composer
+    ports:
+      - 80:80
+    volumes:
+      - ../source/:/var/www/
+  composer:
+    image: composer:1.1
+    working_dir: "/var/www/"
+    container_name: composer
+    command: 'composer update && composer dump-autoload -o'
+    volumes:
+      - ../source/:/var/www/
