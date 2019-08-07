@@ -4,6 +4,7 @@ services:
     build: 
       context: ../
       dockerfile: ./docker/nginxphp/Dockerfile
+    env_file: .env
     container_name: nginxphp
     image: nginxphp
     depends_on:

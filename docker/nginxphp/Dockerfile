@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3.4-fpm
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends --no-install-suggests nginx supervisor && \
@@ -7,6 +7,17 @@ RUN apt-get update && \
 
 #Installing php modules
 RUN docker-php-ext-install mysqli pdo_mysql
+
+#Install xdebug
+RUN pecl install xdebug; \
+    docker-php-ext-enable xdebug; \
+    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "xdebug.remote_host = docker.for.mac.localhost" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "xdebug.remote_port = 9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini;
 
 #log routing
 RUN ln -sf /dev/stdout /var/log/nginx/app.access.log \

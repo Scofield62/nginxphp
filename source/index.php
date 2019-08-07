@@ -10,6 +10,13 @@
 print "<h1 style='text-align: center;'>Welcome to NGINXPHP in Containerized world</h1>";
 phpinfo();
 
+$something = "somevar";
+$something = "changed";
+
+echo $something;
+$something = "asdasd";
+die();
+
 ?>
 </body>
 </html>
