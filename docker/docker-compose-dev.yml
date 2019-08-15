@@ -1,7 +1,7 @@
 version: "3.6"
 services:
   nginxphp:
-    build: 
+    build:
       context: ../
       dockerfile: ./docker/nginxphp/DevDockerfile
     container_name: nginxphp
@@ -17,5 +17,25 @@ services:
     working_dir: "/var/www/"
     container_name: composer
     command: 'composer update && composer dump-autoload -o'
+    depends_on:
+      - mysqldb
     volumes:
       - ../source/:/var/www/
+  mysqldb:
+    build:
+      context: ../
+      dockerfile: ./docker/mysql/DevDockerfile
+    container_name: mysql-db
+    image: nginxphp-mysql:8.0.17
+    environment:
+      MYSQL_USER: dbuser
+      MYSQL_DATABASE: pubg
+      MYSQL_PASSWORD: somepass
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - nginxmysql:/var/lib/mysql
+volumes:
+  nginxmysql:
