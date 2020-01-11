@@ -16,10 +16,13 @@ services:
     image: composer:1.9
     working_dir: "/var/www/"
     container_name: composer
-    command: 'composer update && composer dump-autoload -o'
+    command: '/bin/sh /scripts/mongo_install_composer.sh && composer update && composer dump-autoload -o'
     depends_on:
       - nginxphp
     volumes:
       - type: bind
         source: ../source/
         target: /var/www/
+      - type: bind
+        source: ../docker/composer/
+        target: /scripts/

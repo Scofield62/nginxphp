@@ -1,19 +1,18 @@
 FROM php:7.4.1-fpm
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends --no-install-suggests git nginx supervisor autoconf openssl && \
+    apt-get install -y --no-install-recommends --no-install-suggests nginx supervisor  && \
     rm -rf /var/lib/apt/lists/* && \
     rm -r /var/www/html
 
-#Installing php modules
+#Installing php modules 
 RUN docker-php-ext-install mysqli pdo_mysql
 
+# autoconf openssl git these also need to be installed for doctrine mongodb-odm
+
 #Uncomment this if you need mongodb
-RUN pecl install mongodb \
-    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
-    && curl -sS https://getcomposer.org/installer -o composer-setup.php \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && composer require "doctrine/mongodb-odm"
+#RUN pecl install mongodb \
+#    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
 
 
 #Install xdebug

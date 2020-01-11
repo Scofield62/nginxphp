@@ -3,12 +3,16 @@ FROM php:7.4.1-fpm-alpine
 RUN apk update
 
 #Installing nginx and supervisor
-RUN apk add nginx supervisor autoconf openssl alpine-sdk && \
+RUN apk add nginx supervisor && \
     rm -rf /var/lib/apt/lists/* && \
     rm -r /var/www/html
 
 #Installing php modules
 RUN docker-php-ext-install mysqli pdo_mysql
+
+#Uncomment this if you need mongodb
+#RUN pecl install mongodb \
+#    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
 
 #log routing
 RUN ln -sf /dev/stdout /var/log/nginx/app.access.log \
