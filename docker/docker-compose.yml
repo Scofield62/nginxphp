@@ -6,16 +6,20 @@ services:
       dockerfile: ./docker/nginxphp/DevDockerfile
     container_name: nginxphp
     image: devnginxphp
-    depends_on:
-      - composer
     ports:
       - 80:80
     volumes:
-      - ../source/:/var/www/
+      - type: bind
+        source: ../source/
+        target: /var/www/
   composer:
-    image: composer:1.1
+    image: composer:1.9
     working_dir: "/var/www/"
     container_name: composer
     command: 'composer update && composer dump-autoload -o'
+    depends_on:
+      - nginxphp
     volumes:
-      - ../source/:/var/www/
+      - type: bind
+        source: ../source/
+        target: /var/www/

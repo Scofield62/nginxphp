@@ -9,8 +9,6 @@ RUN apk add nginx supervisor autoconf openssl alpine-sdk && \
 
 #Installing php modules
 RUN docker-php-ext-install mysqli pdo_mysql
-RUN pecl install mongodb \
-    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini 
 
 #log routing
 RUN ln -sf /dev/stdout /var/log/nginx/app.access.log \
@@ -38,6 +36,15 @@ COPY ./docker/nginxphp/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
 #Source code
 COPY ./source/ /var/www/
+
+#Uncomment this if you need mongodb
+RUN cd /var/www \
+    && apk add git \
+    && pecl install mongodb \
+    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
+    && curl -sS https://getcomposer.org/installer -o composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    && composer require "doctrine/mongodb-odm"
 
 WORKDIR /var/www/
 

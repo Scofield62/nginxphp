@@ -1,14 +1,19 @@
-FROM php:7.3.4-fpm
+FROM php:7.4.1-fpm
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends --no-install-suggests nginx supervisor autoconf openssl && \
+    apt-get install -y --no-install-recommends --no-install-suggests git nginx supervisor autoconf openssl && \
     rm -rf /var/lib/apt/lists/* && \
     rm -r /var/www/html
 
 #Installing php modules
 RUN docker-php-ext-install mysqli pdo_mysql
+
+#Uncomment this if you need mongodb
 RUN pecl install mongodb \
-    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini 
+    && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
+    && curl -sS https://getcomposer.org/installer -o composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && composer require "doctrine/mongodb-odm"
 
 
 #Install xdebug
@@ -30,8 +35,8 @@ RUN ln -sf /dev/stdout /var/log/nginx/app.access.log \
 	&& ln -sf /dev/stderr /var/log/php-fpm.log
 
 RUN mkdir -p /run/php \
-    && touch /run/php/php7.0-fpm.sock \
-    && touch /run/php/php7.0-fpm.pid \
+    && touch /run/php/php-fpm.sock \
+    && touch /run/php/php-fpm.pid \
     && mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/conf.d/php.ini-production.ini
 
 RUN chown www-data:www-data /var/www/ -Rf
