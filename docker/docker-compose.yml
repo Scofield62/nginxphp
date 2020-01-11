@@ -6,6 +6,8 @@ services:
       dockerfile: ./docker/nginxphp/DevDockerfile
     container_name: nginxphp
     image: devnginxphp
+    depends_on:
+      - composer
     ports:
       - 80:80
     volumes:
@@ -17,8 +19,6 @@ services:
     working_dir: "/var/www/"
     container_name: composer
     command: '/bin/sh /scripts/mongo_install_composer.sh && composer update && composer dump-autoload -o'
-    depends_on:
-      - nginxphp
     volumes:
       - type: bind
         source: ../source/
