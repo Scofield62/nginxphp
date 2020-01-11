@@ -3,9 +3,9 @@ services:
   nginxphp:
     build: 
       context: ../
-      dockerfile: ./docker/nginxphp/Dockerfile
+      dockerfile: ./docker/nginxphp/DevDockerfile
     container_name: nginxphp
-    image: nginxphp
+    image: devnginxphp
     depends_on:
       - composer
     ports:
