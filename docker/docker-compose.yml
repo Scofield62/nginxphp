@@ -8,8 +8,11 @@ services:
     image: devnginxphp
     depends_on:
       - composer
+      - mongodb
     ports:
       - 80:80
+    networks:
+      - db_network
     volumes:
       - type: bind
         source: ../source/
@@ -26,3 +29,12 @@ services:
       - type: bind
         source: ../docker/composer/
         target: /scripts/
+  mongodb:
+    image: mongo:4.2
+    container_name: mongodb
+    expose:
+      - 27017
+    networks:
+      - db_network
+networks:
+  db_network:
